@@ -34,4 +34,7 @@ Describe 'matchpathstructure' {
     It 'doc1' {
         Get-Content -Path "test\out2\test\files\docs\doc1.html" -Raw | Should -Not -BeNullOrEmpty
     }
+    It 'doc2' {
+        Get-Content -Path "test\out2\test\files\docs\moredocs\doc2.html" -Raw | Should -Not -BeNullOrEmpty
+    }
 }

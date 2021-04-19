@@ -28,7 +28,7 @@ jobs:
       - name: Convert to Tree
         uses: natescherer/markdown-to-html-with-github-style-action@main
         with:
-          path: test\files\README.md,test\files\CHANGELOG.md,test\files\docs\doc1.md
+          path: test\files\README.md,test\files\CHANGELOG.md,test\files\docs
           outputpath: test\out2
           matchpathstructure: true
       - name: Run Pester Tests

@@ -1,0 +1,45 @@
+name: Release
+on: workflow_dispatch
+jobs:
+  Test:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: '5.x'
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+      - name: Update Changelog for Release
+        id: changelog
+        uses: natescherer/changelog-management-action@main
+        with:
+          mode: release
+          releaseversion: ${{ steps.gitversion.outputs.NuGetVersionV2 }}
+      - name: Get Metadata
+        uses: juliojimenez/yamler@v0
+        id: metadata
+        with:
+          yaml-file: metadata.yml
+      - name: Update Repository Description
+        run: |
+          $Token = "${{ secrets.GITHUB_TOKEN }}"
+          $Description = "${{ steps.metadata.outputs.description }}"
+          $UpdateSplat = @{
+            Uri = "https://www.github.com/repos/$env:GITHUB_REPOSITORY"
+            Method = "PATCH"
+            Headers = @{
+              Accept = "application/vnd.github.v3+json"
+              Authorization = "token $Token"
+            }
+            Body = ConvertTo-Json @{ description = $Description }
+          }
+          Invoke-RestMethod @UpdateSplat

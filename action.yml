@@ -1,0 +1,41 @@
+name: Markdown to HTML with GitHub Style
+description: |
+  An action to convert Markdown files to HTML via GitHub's API with embedded GitHub CSS style.
+branding:
+  icon: code
+  color: red
+inputs:
+  path:
+    description: |
+      A comma-separated list of one or more paths to markdown files to convert, relative to the 
+      root of your project.
+    required: true
+  outputpath:
+    description: |
+      Path to a folder where HTML files should be saved. By default, HTML files will be saved in 
+      the same path as the source markdown file.
+    required: false
+  matchpathstructure:
+    description: |
+      If set to `true`, will output files into the path provided to `outputfolder` while preserving 
+      the directory structure of the input files. I.E. if `path` is `README.md` and 'docs/Doc1.md' 
+      `outputfolder` is `out`, the files created will be `out/README.html` and `out/docs/Doc1.html` 
+      rather than both files being in the root of `out`.
+    required: false
+runs:
+  using: composite
+  steps:
+    - name: Validate Inputs
+      run: |
+        if (("${{ inputs.match-path-structure }}" -eq "true") -and ($null -eq "${{ inputs.output-path }}")) {
+          Write-Host "You cannot use 'match-path-structure' without mode 'output-path'."
+          throw "Input validation error."
+        }
+      shell: pwsh
+    - name: Convert Files
+      run: .\src\ConvertTo-Html.ps1
+      shell: pwsh
+      env:
+        INPUTWORKAROUND_PATH: ${{ inputs.path }}
+        INPUTWORKAROUND_OUTPUTPATH: ${{ inputs.output-path }}
+        INPUTWORKAROUND_MATCHPATHSTRUCTURE: ${{ inputs.match-path-structure }}

@@ -1,0 +1,43 @@
+name: CI
+on: [push, workflow_dispatch]
+jobs:
+  Test:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: pwsh
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Set Variables
+        run: |
+          "BARE_REPOSITORY=$($env:GITHUB_REPOSITORY.split("/")[1])" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Convert in Place
+        uses: natescherer/markdown-to-html-with-github-style-action@main
+        with:
+          path: test\files\README.md,test\files\CHANGELOG.md,test\files\docs\doc1.md
+      - name: Convert to Flat Folder
+        uses: natescherer/markdown-to-html-with-github-style-action@main
+        with:
+          path: test\files\README.md,test\files\CHANGELOG.md,test\files\docs\doc1.md
+          outputpath: test\out1
+      - name: Convert to Tree
+        uses: natescherer/markdown-to-html-with-github-style-action@main
+        with:
+          path: test\files\README.md,test\files\CHANGELOG.md,test\files\docs\doc1.md
+          outputpath: test\out2
+          matchpathstructure: true
+      - name: Run Pester Tests
+        id: pester
+        uses: natescherer/pester-tests-report@feature/code-coverage
+        with:
+          report_name: TestResults_${{ runner.os }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gist_name: ${{ env.BARE_REPOSITORY }}_TestResults_${{ runner.os }}.md
+          gist_badge_label: ${{ runner.os }}
+          gist_token: ${{ secrets.PESTER_GIST_TOKEN }}
+          tests_fail_step: true

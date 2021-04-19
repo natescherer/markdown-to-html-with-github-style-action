@@ -10,11 +10,14 @@ foreach ($Path in $Paths) {
 $ExpandedPaths = @()
 foreach ($Path in $QualifiedPaths) {
     if (Test-Path -Path $Path -PathType Container) {
+        Write-Host "$Path is a directory"
         $MarkdownFiles = Get-ChildItem -Path $Path -Include "*.md"
         foreach ($File in $MarkdownFiles) {
+            Write-Host "Adding $($File.FullName)"
             $ExpandedPaths += $File.FullName
         }
     } else {
+        Write-Host "$Path is a file"
         $ExpandedPaths += $Path
     }
 }

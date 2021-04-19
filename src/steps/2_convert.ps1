@@ -1,6 +1,6 @@
 Write-Host "Beginning conversion..."
 
-$Paths = $env:INPUTWORKAROUND_PATH.split(",")
+$Paths = $env:INPUT_PATH.split(",")
 
 foreach ($Path in $Paths) {
     $FullPath = "$env:GITHUB_WORKSPACE\$Path"
@@ -19,19 +19,19 @@ foreach ($Path in $Paths) {
     }
     $RenderedHtml = Invoke-RestMethod @MDSplat
 
-    [string]$CssData = Get-Content -Path "$PSScriptRoot\github-markdown.css" -Raw
-    [string]$HtmlData = Get-Content -Path "$PSScriptRoot\template.html" -Raw
+    [string]$CssData = Get-Content -Path "$PSScriptRoot\..\misc\github-markdown.css" -Raw
+    [string]$HtmlData = Get-Content -Path "$PSScriptRoot\..\misc\template.html" -Raw
     $HtmlData = $HtmlData.Replace("[content]", $RenderedHtml)
     $HtmlData = $HtmlData.Replace("[style]", $CssData)
     $HtmlData = $HtmlData.Replace("[title]", $Title)
 
     $OutputPath = ""
-    if ($env:INPUTWORKAROUND_OUTPUTPATH) {
-        $OutputPath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $env:INPUTWORKAROUND_OUTPUTPATH
+    if ($env:INPUT_OUTPUTPATH) {
+        $OutputPath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $env:INPUT_OUTPUTPATH
     } else {
         $OutputPath = Split-Path -Path $FullPath -Parent
     }
-    if ($env:INPUTWORKAROUND_MATCHPATHSTRUCTURE -eq "true") {
+    if ($env:INPUT_MATCHPATHSTRUCTURE -eq "true") {
         $OutputPath = Join-Path -Path $OutputPath -ChildPath (Split-Path -Path $Path -Parent)
     }
 

@@ -27,16 +27,18 @@ runs:
   using: composite
   steps:
     - name: Validate Inputs
-      run: |
-        if (("${{ inputs.match-path-structure }}" -eq "true") -and ($null -eq "${{ inputs.output-path }}")) {
-          Write-Host "You cannot use 'match-path-structure' without mode 'output-path'."
-          throw "Input validation error."
-        }
+      id: validate
+      run: . "$env:GITHUB_ACTION_PATH\src\steps\1_validate.ps1"
+      env:
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_OUTPUTPATH: ${{ inputs.outputpath }}
+        INPUT_MATCHPATHSTRUCTURE: ${{ inputs.matchpathstructure }}
       shell: pwsh
     - name: Convert Files
-      run: .\src\ConvertTo-Html.ps1
+      id: convert
+      run: . "$env:GITHUB_ACTION_PATH\src\steps\2_convert.ps1"
       shell: pwsh
       env:
-        INPUTWORKAROUND_PATH: ${{ inputs.path }}
-        INPUTWORKAROUND_OUTPUTPATH: ${{ inputs.outputpath }}
-        INPUTWORKAROUND_MATCHPATHSTRUCTURE: ${{ inputs.matchpathstructure }}
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_OUTPUTPATH: ${{ inputs.outputpath }}
+        INPUT_MATCHPATHSTRUCTURE: ${{ inputs.matchpathstructure }}

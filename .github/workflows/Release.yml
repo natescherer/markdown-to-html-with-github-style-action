@@ -34,7 +34,7 @@ jobs:
           $Token = "${{ secrets.GITHUB_TOKEN }}"
           $Description = "${{ steps.metadata.outputs.description }}"
           $UpdateSplat = @{
-            Uri = "https://www.github.com/repos/$env:GITHUB_REPOSITORY"
+            Uri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY"
             Method = "PATCH"
             Headers = @{
               Accept = "application/vnd.github.v3+json"

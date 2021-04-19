@@ -2,12 +2,26 @@ Write-Host "Beginning conversion..."
 
 $Paths = $env:INPUT_PATH.split(",")
 
+$QualifiedPaths = @()
 foreach ($Path in $Paths) {
-    $FullPath = "$env:GITHUB_WORKSPACE\$Path"
-    Write-Host "Converting '$FullPath'..."
+    $QualifiedPaths += "$env:GITHUB_WORKSPACE\$Path"
+}
 
-    [string]$Content = Get-Content -Path $FullPath -Raw
-    $ContentArray = Get-Content -Path $FullPath
+$ExpandedPaths = @()
+foreach ($Path in $QualifiedPaths) {
+    if (Test-Path -Path $Path -PathType Container) {
+        $MarkdownFiles = Get-ChildItem -Path $Path -Include "*.md"
+        foreach ($File in $MarkdownFiles) {
+            $ExpandedPaths += $File.FullName
+        }
+    } else {
+        $ExpandedPaths += $Path
+    }
+}
+
+foreach ($Path in $ExpandedPaths) {
+    [string]$Content = Get-Content -Path $Path -Raw
+    $ContentArray = Get-Content -Path $Path
     $Title = ($ContentArray | Where-Object {$_ -like "# *"}).Replace("# ","")
     $ContentFormatted = [PSCustomObject]@{ "text" = $Content }
 
@@ -29,7 +43,7 @@ foreach ($Path in $Paths) {
     if ($env:INPUT_OUTPUTPATH) {
         $OutputPath = Join-Path -Path $env:GITHUB_WORKSPACE -ChildPath $env:INPUT_OUTPUTPATH
     } else {
-        $OutputPath = Split-Path -Path $FullPath -Parent
+        $OutputPath = Split-Path -Path $Path -Parent
     }
     if ($env:INPUT_MATCHPATHSTRUCTURE -eq "true") {
         $OutputPath = Join-Path -Path $OutputPath -ChildPath (Split-Path -Path $Path -Parent)

@@ -37,5 +37,5 @@ runs:
       shell: pwsh
       env:
         INPUTWORKAROUND_PATH: ${{ inputs.path }}
-        INPUTWORKAROUND_OUTPUTPATH: ${{ inputs.output-path }}
-        INPUTWORKAROUND_MATCHPATHSTRUCTURE: ${{ inputs.match-path-structure }}
+        INPUTWORKAROUND_OUTPUTPATH: ${{ inputs.outputpath }}
+        INPUTWORKAROUND_MATCHPATHSTRUCTURE: ${{ inputs.matchpathstructure }}

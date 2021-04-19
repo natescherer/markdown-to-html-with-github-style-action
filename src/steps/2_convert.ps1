@@ -46,7 +46,8 @@ foreach ($Path in $ExpandedPaths) {
         $OutputPath = Split-Path -Path $Path -Parent
     }
     if ($env:INPUT_MATCHPATHSTRUCTURE -eq "true") {
-        $OutputPath = Join-Path -Path $OutputPath -ChildPath (Split-Path -Path $Path -Parent)
+        $UnqualifiedPath = $Path.replace($env:GITHUB_WORKSPACE,"")
+        $OutputPath = Join-Path -Path $OutputPath -ChildPath (Split-Path -Path $UnqualifiedPath -Parent)
     }
 
     if (!(Test-Path -Path $OutputPath)) {

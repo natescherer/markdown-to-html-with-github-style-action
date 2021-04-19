@@ -26,12 +26,12 @@ Describe 'outputpath' {
 
 Describe 'matchpathstructure' {
     It 'README' {
-        Get-Content -Path "test\out2\README.html" -Raw | Should -Not -BeNullOrEmpty
+        Get-Content -Path "test\out2\test\files\README.html" -Raw | Should -Not -BeNullOrEmpty
     }
     It 'CHANGELOG' {
-        Get-Content -Path "test\out2\CHANGELOG.html" -Raw | Should -Not -BeNullOrEmpty
+        Get-Content -Path "test\out2\test\files\CHANGELOG.html" -Raw | Should -Not -BeNullOrEmpty
     }
     It 'doc1' {
-        Get-Content -Path "test\out2\docs\doc1.html" -Raw | Should -Not -BeNullOrEmpty
+        Get-Content -Path "test\out2\test\files\docs\doc1.html" -Raw | Should -Not -BeNullOrEmpty
     }
 }

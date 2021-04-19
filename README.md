@@ -2,6 +2,8 @@
 
 A GitHub action to convert Markdown files to HTML via GitHub's API with embedded GitHub CSS style.
 
+Essentially, this action will take input Markdown files and render them into self-contained HTML files that look as close as possible to how Markdown files are displayed on github.com.
+
 It is tested and runs on `windows-latest`, `ubuntu-latest`, and `macos-latest`.
 
 ## Usage

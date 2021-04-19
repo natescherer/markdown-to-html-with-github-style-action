@@ -17,10 +17,11 @@ inputs:
     required: false
   matchpathstructure:
     description: |
-      If set to `true`, will output files into the path provided to `outputfolder` while preserving 
-      the directory structure of the input files. I.E. if `path` is `README.md` and 'docs/Doc1.md' 
-      `outputfolder` is `out`, the files created will be `out/README.html` and `out/docs/Doc1.html` 
-      rather than both files being in the root of `out`.
+      If set to `true`, will output files into the path provided to `outputfolder` while 
+      preserving the directory structure of the input files. I.E. if `path` is 
+      `README.md,docs/Doc1.md` and `outputfolder` is `out`, the files created will be 
+      `out/README.html` and `out/docs/Doc1.html` rather than both files being created in the root 
+      of `out`.
     required: false
 runs:
   using: composite

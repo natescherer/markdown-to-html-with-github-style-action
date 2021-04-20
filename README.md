@@ -16,7 +16,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Convert Markdown to HTML
-        uses: natescherer/markdown-to-html-with-github-style-action@v1.0.0
+        uses: natescherer/markdown-to-html-with-github-style-action@v1
         with:
           path: README.md,CHANGELOG.md,docs\doc1.md
           outputpath: out

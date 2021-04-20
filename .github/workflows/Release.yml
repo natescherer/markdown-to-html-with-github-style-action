@@ -61,7 +61,8 @@ jobs:
         with:
           tag_name: v${{ steps.gitversion.outputs.MajorMinorPatch }}
           body: |
-            # ${{ steps.metadata.outputs.description }}
+            # Release v${{ steps.gitversion.outputs.MajorMinorPatch }}
+            ${{ steps.metadata.outputs.releaseheader }}
 
             ## Changes
             ${{ steps.changelog.outputs.releasenotes }}

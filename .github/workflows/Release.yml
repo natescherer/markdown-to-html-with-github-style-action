@@ -50,3 +50,8 @@ jobs:
           [string]$Content = Get-Content -Path "$env:GITHUB_WORKSPACE\README.md" -Raw
           $Content = $Content -replace "<!-- REPLACER START: desc -->.*<!-- REPLACER END: desc -->","<!-- REPLACER START: desc -->$Description<!-- REPLACER END: desc -->"
           Out-File -InputObject $Content -FilePath "$env:GITHUB_WORKSPACE\README.md"  -NoNewline
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-artifact
+          path: ${{ github.workspace }}

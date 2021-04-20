@@ -29,17 +29,24 @@ jobs:
         id: metadata
         with:
           yaml-file: metadata.yml
-      - name: Update Repository Description
+      - name: Check if Repository Description Matches Metadata
         run: |
-          $Token = "${{ secrets.GITHUB_TOKEN }}"
           $Description = "${{ steps.metadata.outputs.description }}"
-          $UpdateSplat = @{
+          $RepoSplat = @{
             Uri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY"
-            Method = "PATCH"
+            Method = "GET"
             Headers = @{
               Accept = "application/vnd.github.v3+json"
-              Authorization = "token $Token"
             }
-            Body = ConvertTo-Json @{ description = $Description }
           }
-          Invoke-RestMethod @UpdateSplat
+          $RepoData = Invoke-RestMethod @RepoSplat
+
+          if ($RepoData.Description -ne $Description) {
+            throw "Repo description does not match metadata! Please fix and re-run."
+          }
+      - name: Update README
+        run: |
+          $Description = "${{ steps.metadata.outputs.description }}"
+          [string]$Content = Get-Content -Path "$env:GITHUB_WORKSPACE\README.md" -Raw
+          $Content = $Content -replace "<!-- REPLACER START: desc -->.*<!-- REPLACER END: desc -->","<!-- REPLACER START: desc -->$Description<!-- REPLACER END: desc -->"
+          Out-File -InputObject $Content -FilePath "$env:GITHUB_WORKSPACE\README.md"  -NoNewline

@@ -23,7 +23,7 @@ jobs:
         uses: natescherer/changelog-management-action@main
         with:
           mode: release
-          releaseversion: ${{ steps.gitversion.outputs.NuGetVersionV2 }}
+          releaseversion: ${{ steps.gitversion.outputs.MajorMinorPatch }}
       - name: Get Metadata
         uses: juliojimenez/yamler@v0
         id: metadata
@@ -51,8 +51,19 @@ jobs:
           $NL = [System.Environment]::NewLine
           $Content = $Content -replace "(?ms)<!-- REPLACER START: desc -->.*<!-- REPLACER END: desc -->","<!-- REPLACER START: desc -->$NL$Description$NL<!-- REPLACER END: desc -->"
           Out-File -InputObject $Content -FilePath "$env:GITHUB_WORKSPACE\README.md" -NoNewline
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+      - name: Commit Changes to Repo
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          name: test-artifact
-          path: ${{ github.workspace }}
+          commit_message: Release v${{ steps.gitversion.outputs.MajorMinorPatch }}
+          tagging_message: v${{ steps.gitversion.outputs.MajorMinorPatch }}
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.gitversion.outputs.MajorMinorPatch }}
+          body: |
+            # ${{ steps.metadata.outputs.description }}
+
+            ## Changes
+            ${{ steps.changelog.outputs.releasenotes }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

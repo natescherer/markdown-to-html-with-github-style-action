@@ -56,6 +56,7 @@ jobs:
         with:
           commit_message: Release v${{ steps.gitversion.outputs.MajorMinorPatch }}
           tagging_message: v${{ steps.gitversion.outputs.MajorMinorPatch }}
+          file_pattern: :!test\* :!test/*
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:

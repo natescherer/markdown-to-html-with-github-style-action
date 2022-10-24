@@ -33,7 +33,7 @@ jobs:
           matchpathstructure: true
       - name: Run Pester Tests
         id: pester
-        uses: natescherer/pester-tests-report@feature/code-coverage
+        uses: zyborg/pester-tests-report@v1
         with:
           report_name: TestResults_${{ runner.os }}
           github_token: ${{ secrets.GITHUB_TOKEN }}

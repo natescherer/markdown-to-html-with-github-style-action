@@ -6,7 +6,7 @@ on:
         description: The header to be added to the release.
         required: false
 jobs:
-  Test:
+  Release:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,6 +26,8 @@ jobs:
       - name: Github Repository Metadata
         id: metadata
         uses: varunsridharan/action-repository-meta@2.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update Changelog for Release
         id: changelog
         uses: natescherer/changelog-management-action@main

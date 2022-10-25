@@ -1,8 +1,8 @@
 # Markdown to HTML with GitHub Style GitHub Action
 
-<!-- REPLACER START: desc -->
-A GitHub Action to convert Markdown files to HTML via GitHub's API with embedded GitHub CSS style.
-<!-- REPLACER END: desc -->
+<!--START_SECTION:description-->
+A GitHub Action to convert Markdown files to HTML via GitHub's API.
+<!--START_SECTION:description-->
 
 Essentially, this action will take input Markdown files and render them into self-contained HTML files that look as close as possible to how Markdown files are displayed on github.com.
 
@@ -24,7 +24,7 @@ jobs:
 
 ### Inputs
 
-This Action defines the following formal inputs.
+<!--(inputs-start)-->
 
 | Name | Required | Description
 |-|-|-|
@@ -32,9 +32,15 @@ This Action defines the following formal inputs.
 | **`outputpath`** | false | Path to a folder where HTML files should be saved. By default, HTML files will be saved in the same path as the source markdown file.
 | **`matchpathstructure`** | false | If set to `true`, will output files into the path provided to `outputfolder` while preserving the directory structure of the input files. I.E. if `path` is `README.md,docs/Doc1.md` and `outputfolder` is `out`, the files created will be `out/README.html` and `out/docs/Doc1.html` rather than both files being created in the root of `out`.
 
+<!--(inputs-end)-->
+
 ### Outputs
 
+<!--(outputs-start)-->
+
 This Action does not have outputs.
+
+<!--(outputs-end)-->
 
 ## Authors
 

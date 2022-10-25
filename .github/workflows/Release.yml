@@ -1,8 +1,13 @@
 name: Release
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      ReleaseHeader:
+        description: The header to be added to the release.
+        required: false
 jobs:
   Test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: pwsh
@@ -18,54 +23,38 @@ jobs:
       - name: Determine Version
         id: gitversion
         uses: gittools/actions/gitversion/execute@v0.9.14
+      - name: Github Repository Metadata
+        id: metadata
+        uses: varunsridharan/action-repository-meta@2.2
       - name: Update Changelog for Release
         id: changelog
         uses: natescherer/changelog-management-action@main
         with:
           mode: release
-          releaseversion: ${{ steps.gitversion.outputs.MajorMinorPatch }}
-      - name: Get Metadata
-        uses: juliojimenez/yamler@v0
-        id: metadata
+          releaseVersion: ${{ steps.gitversion.outputs.SemVer }}
+      - name: Update README Description
+        uses: natescherer/reactive-readme@main
         with:
-          yaml-file: metadata.yml
-      - name: Check if Repository Description Matches Metadata
-        run: |
-          $Description = "${{ steps.metadata.outputs.description }}"
-          $RepoSplat = @{
-            Uri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY"
-            Method = "GET"
-            Headers = @{
-              Accept = "application/vnd.github.v3+json"
-            }
-          }
-          $RepoData = Invoke-RestMethod @RepoSplat
+          value: ${{ steps.metadata.outputs.description }}
+          section: description
+      - name: Update README Inputs/Outputs
+        uses: natescherer/update-action-readme@feature/handle-no-outputs
+      - uses: actions/upload-artifact@v3
+        with:
+          name: artifact
+          path: ${{ github.workspace }}
+      # - name: Commit Changes to Repo
+      #   uses: stefanzweifel/git-auto-commit-action@v4
+      #   with:
+      #     commit_message: Release v${{ steps.gitversion.outputs.SemVer }}
+      #     file_pattern: ":!test\\* :!test/*"
+      # - name: Create Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: v${{ steps.gitversion.outputs.MajorMinorPatch }}
+      #     body: |
+      #       # Release v${{ steps.gitversion.outputs.SemVer }}
+      #       ${{ github.event.inputs.ReleaseHeader}}
 
-          if ($RepoData.Description -ne $Description) {
-            throw "Repo description does not match metadata! Please fix and re-run."
-          }
-      - name: Update README
-        run: |
-          $Description = "${{ steps.metadata.outputs.description }}"
-          [string]$Content = Get-Content -Path "$env:GITHUB_WORKSPACE\README.md" -Raw
-          $NL = [System.Environment]::NewLine
-          $Content = $Content -replace "(?ms)<!-- REPLACER START: desc -->.*<!-- REPLACER END: desc -->","<!-- REPLACER START: desc -->$NL$Description$NL<!-- REPLACER END: desc -->"
-          Out-File -InputObject $Content -FilePath "$env:GITHUB_WORKSPACE\README.md" -NoNewline
-      - name: Commit Changes to Repo
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Release v${{ steps.gitversion.outputs.MajorMinorPatch }}
-          tagging_message: v${{ steps.gitversion.outputs.MajorMinorPatch }}
-          file_pattern: ":!test\\* :!test/*"
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ steps.gitversion.outputs.MajorMinorPatch }}
-          body: |
-            # Release v${{ steps.gitversion.outputs.MajorMinorPatch }}
-            ${{ steps.metadata.outputs.releaseheader }}
-
-            ## Changes
-            ${{ steps.changelog.outputs.releasenotes }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #       ## Changes
+      #       ${{ steps.changelog.outputs.releasenotes }}

@@ -1,27 +1,17 @@
 name: Markdown to HTML with GitHub Style
-description: |
-  An action to convert Markdown files to HTML via GitHub's API with embedded GitHub CSS style.
+description: An action to convert Markdown files to HTML via GitHub's API with embedded GitHub CSS style.
 branding:
   icon: code
   color: red
 inputs:
   path:
-    description: |
-      A comma-separated list of one or more paths to markdown files to convert, relative to the 
-      root of your project.
+    description: A comma-separated list of one or more paths to markdown files to convert, relative to the root of your project.
     required: true
   outputpath:
-    description: |
-      Path to a folder where HTML files should be saved. By default, HTML files will be saved in 
-      the same path as the source markdown file.
+    description: Path to a folder where HTML files should be saved. By default, HTML files will be saved in the same path as the source markdown file.
     required: false
   matchpathstructure:
-    description: |
-      If set to `true`, will output files into the path provided to `outputfolder` while 
-      preserving the directory structure of the input files. I.E. if `path` is 
-      `README.md,docs/Doc1.md` and `outputfolder` is `out`, the files created will be 
-      `out/README.html` and `out/docs/Doc1.html` rather than both files being created in the root 
-      of `out`.
+    description: If set to `true`, will output files into the path provided to `outputfolder` while preserving the directory structure of the input files. I.E. if `path` is `README.md,docs/Doc1.md` and `outputfolder` is `out`, the files created will be `out/README.html` and `out/docs/Doc1.html` rather than both files being created in the root of `out`.
     required: false
 runs:
   using: composite

@@ -34,12 +34,6 @@ jobs:
         with:
           mode: release
           releaseVersion: ${{ steps.gitversion.outputs.SemVer }}
-      - name: Update README Description
-        uses: natescherer/reactive-readme@main
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          value: ${{ steps.metadata.outputs.description }}
-          section: description
       - name: Update README Inputs/Outputs
         uses: natescherer/update-action-readme@feature/handle-no-outputs
       - uses: actions/upload-artifact@v3

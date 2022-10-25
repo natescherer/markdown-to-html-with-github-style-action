@@ -37,6 +37,7 @@ jobs:
       - name: Update README Description
         uses: natescherer/reactive-readme@main
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           value: ${{ steps.metadata.outputs.description }}
           section: description
       - name: Update README Inputs/Outputs

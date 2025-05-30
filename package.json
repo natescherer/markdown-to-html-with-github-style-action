@@ -1,0 +1,25 @@
+{
+  "name": "markdown-to-html-with-github-style-action",
+  "version": "1.1.0",
+  "description": "<!--START_SECTION:description--> A GitHub Action to convert Markdown files to HTML via GitHub's API. <!--START_SECTION:description-->",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/natescherer/markdown-to-html-with-github-style-action.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/natescherer/markdown-to-html-with-github-style-action/issues"
+  },
+  "homepage": "https://github.com/natescherer/markdown-to-html-with-github-style-action#readme",
+  "dependencies": {
+    "github-markdown-css": "^5.8.1"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "sops.binPath": "/Users/nate/.local/share/mise/shims/sops",
+  "debug.javascript.defaultRuntimeExecutable": {
+    "pwa-node": "/Users/nate/.local/share/mise/shims/node"
+  }
+}
